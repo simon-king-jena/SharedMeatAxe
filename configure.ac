@@ -37,6 +37,14 @@ AC_ARG_WITH([mtxlib],
     [mtxlibdir='${datadir}/meataxe'])
 AC_SUBST([mtxlibdir])
 
+AC_ARG_ENABLE([tables],
+    [AS_HELP_STRING([--enable-tables],
+        [generate and install arithmetic tables (default: disabled)])],
+    [], [enable_tables=no])
+AS_CASE([$enable_tables], [yes|no], [],
+    [AC_MSG_ERROR([--enable-tables accepts only yes or no])])
+AM_CONDITIONAL([BUILD_TABLES], [test "x$enable_tables" = xyes])
+
 # Checks for libraries.
 
 # Checks for header files.

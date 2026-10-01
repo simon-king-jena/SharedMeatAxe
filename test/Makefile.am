@@ -1,7 +1,12 @@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(top_srcdir)/test
 LDADD       = ../src/libmtx.la
 mtxlibdir = @mtxlibdir@
+if BUILD_TABLES
 TESTS_ENVIRONMENT = MTXLIB='$(abs_top_builddir)/tables' MTX_DEFAULT_LIB='$(mtxlibdir)'
+else
+# Let tests generate any tables they need in the writable test directory.
+TESTS_ENVIRONMENT = MTXLIB='$(abs_builddir)' MTX_DEFAULT_LIB='$(mtxlibdir)'
+endif
 
 # -----> Executables (for tests)
 

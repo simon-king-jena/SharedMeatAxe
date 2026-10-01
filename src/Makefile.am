@@ -1,8 +1,10 @@
 # -----> Shared library
 mtxlibdir = @mtxlibdir@
 AM_CPPFLAGS = -DMTXLIB='"$(mtxlibdir)"'
+if BUILD_TABLES
 noinst_PROGRAMS = mtx-gentables
 mtx_gentables_SOURCES = gentables.c
+endif
 
 lib_LTLIBRARIES             = libmtx.la
 libmtx_la_SOURCES           = meataxe.h args.c berlekmp.c \

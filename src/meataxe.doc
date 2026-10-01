@@ -353,8 +353,11 @@ directory first. If the file is not found there, they try to find it in
 the library directory, provided a library has been defined.
 
 The default library directory is selected by configure's --with-mtxlib=DIR
-option, and otherwise defaults to DATADIR/meataxe. Arithmetic tables are
-generated during the build and installed there by make install.
+option, and otherwise defaults to DATADIR/meataxe. With --enable-tables,
+arithmetic tables are generated during the build and installed there by
+make install. Table generation and installation are disabled by default
+for compatibility with earlier releases; --disable-tables explicitly
+selects this behavior.
 MeatAxe applications can override this directory with the environment variable
 MTXLIB or the -L command-line option. Library clients can override it by
 setting the global C variable MtxLibDir. A trailing separator is not required.

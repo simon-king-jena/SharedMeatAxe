@@ -5,6 +5,7 @@ pkgconfig_DATA = libmtx.pc
 mtxlibdir = @mtxlibdir@
 
 # Generate in the build tree, even when the installed directory is read-only.
+if BUILD_TABLES
 all-local: tables.stamp
 
 tables.stamp: src/mtx-gentables
@@ -18,6 +19,7 @@ install-data-local: tables.stamp
 
 uninstall-local:
 	$(RM) "$(DESTDIR)$(mtxlibdir)"/p*.zzz
+endif
 
 clean-local:
 	$(RM) tables.stamp

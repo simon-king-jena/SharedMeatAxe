@@ -2,6 +2,26 @@ ACLOCAL_AMFLAGS = -I m4
 ZZZ = 0
 SUBDIRS = src test
 pkgconfig_DATA = libmtx.pc
+mtxlibdir = @mtxlibdir@
+
+# Generate in the build tree, even when the installed directory is read-only.
+all-local: tables.stamp
+
+tables.stamp: src/mtx-gentables
+	$(MKDIR_P) tables
+	MTXLIB="$(abs_builddir)/tables" ./src/mtx-gentables
+	touch $@
+
+install-data-local: tables.stamp
+	$(MKDIR_P) "$(DESTDIR)$(mtxlibdir)"
+	$(INSTALL_DATA) tables/p*.zzz "$(DESTDIR)$(mtxlibdir)"
+
+uninstall-local:
+	$(RM) "$(DESTDIR)$(mtxlibdir)"/p*.zzz
+
+clean-local:
+	$(RM) tables.stamp
+	$(RM) -r tables
 
 EXTRA_DIST = etc/Doxyfile etc/meataxe-footer.html \
 	test/t.config test/data/a5reg.1  test/data/ac.2 test/data/m11.1 \

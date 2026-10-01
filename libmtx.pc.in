@@ -2,6 +2,9 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
+datadir=@datadir@
+datarootdir=@datarootdir@
+mtxlibdir=@mtxlibdir@
 
 Name: libmtx 
 URL: https://github.com/simon-king-jena/SharedMeatAxe 

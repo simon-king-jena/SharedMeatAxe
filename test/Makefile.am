@@ -1,5 +1,7 @@
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/src -I$(top_srcdir)/test
 LDADD       = ../src/libmtx.la
+mtxlibdir = @mtxlibdir@
+TESTS_ENVIRONMENT = MTXLIB='$(abs_top_builddir)/tables' MTX_DEFAULT_LIB='$(mtxlibdir)'
 
 # -----> Executables (for tests)
 
@@ -8,7 +10,8 @@ check_HEADERS         = c-args.h c-charpol.h c-ffmat.h c-fileio.h \
 	c-sets.h c-tensor.h c-bitstring.h c-ffio.h c-ffrow.h c-fpoly.h \
 	check.h c-matins.h c-matset.h c-perm.h c-pseed.h c-random.h c-stf.h
 
-check_PROGRAMS        = checksum zzztest
+check_PROGRAMS        = checksum zzztest mtxlib-default
+mtxlib_default_SOURCES = mtxlib-default.c
 
 zzztest_SOURCES       = zzztest.c c-args.c c-charpol.c c-ffmat.c c-fileio.c \
 	c-grease.c c-kernel.c c-matrix.c c-os.c c-poly.c c-quot.c \
@@ -19,7 +22,8 @@ zzztest_SOURCES       = zzztest.c c-args.c c-charpol.c c-ffmat.c c-fileio.c \
 
 TESTS                 = t-0100 t-0000 t-0100 t-0100 t-0105 t-0106 t-0107 \
 	t-0108 t-0109 t-0110 t-0111 t-0112 t-0113 t-0114 t-0115 t-0116 t-0117 \
-	t-0118 t-0200 t-0201 t-0210 t-0211 t-0212 t-0213 t-0214 t-0215 zzztest
+	t-0118 t-0200 t-0201 t-0210 t-0211 t-0212 t-0213 t-0214 t-0215 zzztest mtxlib-default.sh
+EXTRA_DIST = mtxlib-default.sh
 
 clean-local:
 	rm -rf p*.zzz

@@ -1,4 +1,9 @@
 # -----> Shared library
+mtxlibdir = @mtxlibdir@
+AM_CPPFLAGS = -DMTXLIB='"$(mtxlibdir)"'
+noinst_PROGRAMS = mtx-gentables
+mtx_gentables_SOURCES = gentables.c
+
 lib_LTLIBRARIES             = libmtx.la
 libmtx_la_SOURCES           = meataxe.h args.c berlekmp.c \
 	bsand.c bscore.c bsdup.c bsissub.c bsmatch.c bsminus.c \

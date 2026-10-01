@@ -12,6 +12,21 @@ executables.
 
 See COPYING for licence information.
 
+Arithmetic tables
+-----------------
+By default, configure selects DATADIR/meataxe (normally PREFIX/share/meataxe)
+as the library's arithmetic table directory. Use --with-mtxlib=DIR to select
+a different directory. The resolved path is compiled into libmtx and its
+programs, and is available through pkg-config --variable=mtxlibdir libmtx.
+
+make generates the tables for all prime powers from 2 through 256 in the
+build tree; make install copies them to the configured directory, respecting
+DESTDIR. Installed programs and library clients can therefore read the tables
+without setting MTXLIB or having write access to the installation directory.
+The programs still accept MTXLIB and -L/--mtxlib as runtime overrides, with
+the command-line option taking precedence. Library clients can override the
+default by setting MtxLibDir before performing finite-field operations.
+
 ================================================================================
 PACKAGE OVERVIEW
 ================================================================================

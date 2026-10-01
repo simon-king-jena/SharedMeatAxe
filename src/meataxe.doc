@@ -352,11 +352,12 @@ When given a file name, all programs look for the file in the current
 directory first. If the file is not found there, they try to find it in
 the library directory, provided a library has been defined.
 
-For MeatAxe applications, the location of the library directory must be
-provided at run-time by defining the environment variable MTXLIB.
-It must be a directory name including a trailing separator character
-(e.g., '/' for UNIX). For library functions, the library directory must
-be provided at run-time by defining the global C variable MtxLibDir.
+The default library directory is selected by configure's --with-mtxlib=DIR
+option, and otherwise defaults to DATADIR/meataxe. Arithmetic tables are
+generated during the build and installed there by make install.
+MeatAxe applications can override this directory with the environment variable
+MTXLIB or the -L command-line option. Library clients can override it by
+setting the global C variable MtxLibDir. A trailing separator is not required.
 **/
 
 
@@ -515,5 +516,4 @@ meaning is always the same.
 @par -G
   Generate output in GAP format.
 **/
-
 

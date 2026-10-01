@@ -28,6 +28,15 @@ AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_MKDIR_P
 
+AC_ARG_WITH([mtxlib],
+    [AS_HELP_STRING([--with-mtxlib=DIR],
+        [default arithmetic table directory @<:@DATADIR/meataxe@:>@])],
+    [AS_CASE([$withval], [yes|no|""],
+        [AC_MSG_ERROR([--with-mtxlib requires a directory])],
+        [mtxlibdir=$withval])],
+    [mtxlibdir='${datadir}/meataxe'])
+AC_SUBST([mtxlibdir])
+
 # Checks for libraries.
 
 # Checks for header files.

@@ -20,6 +20,8 @@ Makefile
 /missing
 /stamp-*
 /test-driver
+/tables/
+/tables.stamp
 src/*
 !src/*.*
 test/*

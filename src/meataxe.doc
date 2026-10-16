@@ -321,9 +321,9 @@ All programs use lookup tables for row operations and finite field arithmetic.
 These tables are read from a file named <tt>pXXX.zzz</tt>.
 where XXX is the field order.
 For example, tables for GF(25) are read from the file <tt>p025.zzz</tt>.
-If the table file does not exist, it will be created automatically.
-Table files may also be placed in the library directory (see below)
-because the programs look there before they try to generate a new file.
+The files are read from the library directory (see @ref sec_libdir).
+If a table file does not exist, it will be created automatically in that
+directory, which must then be writable.
 
 @section sec_ft File Types
 All MeatAxe programs operate on files and do not require user interaction.
@@ -348,12 +348,17 @@ section @ref pg_progs_index. You can also run any MeatAxe program
 with the "--help" option to get an on-line help.
 
 @section sec_libdir The library directory
-When given a file name, all programs look for the file in the current
-directory first. If the file is not found there, they try to find it in
-the library directory, provided a library has been defined.
+Arithmetic tables are read from the library directory. If a table is missing,
+it is generated in that directory, which must then be writable. There is no
+search of the current directory before looking in the library directory.
+Ordinary input and output file names are used as given; relative paths refer
+to the current directory. In the library API, only SysFopen() calls with the
+FM_LIB flag prefix the file name with MtxLibDir. Without this flag, the library
+directory does not affect where a file is read or written.
 
 The default library directory is selected by configure's --with-mtxlib=DIR
-option, and otherwise defaults to DATADIR/meataxe. With --enable-tables,
+option, and otherwise defaults to DATADIR/meataxe, where DATADIR is selected
+by the standard --datadir configure option. With --enable-tables,
 arithmetic tables are generated during the build and installed there by
 make install. Table generation and installation are disabled by default
 for compatibility with earlier releases; --disable-tables explicitly

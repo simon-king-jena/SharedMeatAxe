@@ -202,10 +202,14 @@ void SysSetTimeLimit(long nsecs)
  ** writing, or FM_APPEND (append to existing file or create a new file).
  ** Additional flags may be or'ed to the mode:
  ** @par FM_LIB
- ** If the file does not exist in the current directory, look in the library directory.
- ** The library directory is provided in a C constant @c MtxLibDir, that users of the
- ** MeatAxe library should define. When running a MeatAxe application, it is also
- ** possible to define the library location by the environment variable @c MTXLIB.
+ ** Prefix the file name with the library directory @c MtxLibDir for reading or writing.
+ ** There is no search of the current directory first. If @c MtxLibDir is empty, use the
+ ** file name as given. Arithmetic table loading and generation use this flag.
+ ** The default directory is configured at build time. Library clients can override it
+ ** by setting @c MtxLibDir; MeatAxe applications also accept the environment variable
+ ** @c MTXLIB and the @c -L command-line option.
+ ** Without @c FM_LIB, the file name is used unchanged, so relative paths refer to the
+ ** current directory regardless of @c MtxLibDir.
  ** @par FM_TEXT
  ** Open in text mode. This flag must be used on some systems (e.g., MS-DOS) to open text files.
  ** By default, files are assumed to contain binary data.
@@ -229,8 +233,8 @@ FILE *SysFopen(const char *name, int mode)
 	return NULL;
     }
 
-    /* Search library directory
-       ------------------------ */
+    /* Use the library directory only when requested.
+       ---------------------------------------------- */
     if ((mode & FM_LIB) != 0)
     {
         if (*MtxLibDir != 0)

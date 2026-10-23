@@ -41,6 +41,19 @@ input and output file names are used as given, with relative paths interpreted
 in the current directory. At the library API level, only SysFopen() calls with
 the FM_LIB flag prefix the file name with MtxLibDir.
 
+Continuous integration and releases
+-----------------------------------
+GitHub Actions builds and runs make -j8 check on every push and pull request,
+using separate out-of-tree builds with --enable-tables and --disable-tables.
+Build and test logs are saved as workflow artifacts. Successful builds also
+produce source archives with make dist, including the generated configure script.
+
+Pushing a tag runs the same checks and, if both configurations pass, creates a
+GitHub release with generated release notes and the .tar.gz and .tar.bz2 source
+archives attached. Before tagging a release, update the version in configure.ac
+and the corresponding entry in NEWS. The workflow uses GitHub's built-in token;
+no additional release secret is needed.
+
 ================================================================================
 PACKAGE OVERVIEW
 ================================================================================

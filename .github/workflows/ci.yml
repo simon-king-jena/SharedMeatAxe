@@ -1,0 +1,107 @@
+name: Build, test, and release
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (tables ${{ matrix.tables }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        tables: [disabled, enabled]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            autoconf automake build-essential bzip2 libtool pkg-config
+
+      - name: Bootstrap
+        run: autoreconf -fi
+
+      - name: Configure
+        env:
+          TABLES: ${{ matrix.tables }}
+        run: |
+          mkdir build
+          cd build
+          case "$TABLES" in
+            enabled) tables_option=--enable-tables ;;
+            disabled) tables_option=--disable-tables ;;
+          esac
+          ../configure --disable-doxygen-doc "$tables_option"
+
+      - name: Build
+        working-directory: build
+        run: make -j"$(nproc)"
+
+      - name: Run tests in parallel
+        working-directory: build
+        run: make -j8 check
+
+      - name: Create source archives
+        if: matrix.tables == 'disabled'
+        working-directory: build
+        run: make dist
+
+      - name: Save source archives
+        if: matrix.tables == 'disabled'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: source-archives
+          path: |
+            build/shared_meataxe-*.tar.gz
+            build/shared_meataxe-*.tar.bz2
+          if-no-files-found: error
+
+      - name: Save build and test logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: logs-tables-${{ matrix.tables }}
+          path: |
+            build/config.log
+            build/test/*.log
+            build/test/*.trs
+          retention-days: 14
+
+  release:
+    name: Publish release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Download source archives
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: source-archives
+          path: archives
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" --repo "$GITHUB_REPOSITORY" --clobber \
+              archives/*.tar.gz archives/*.tar.bz2
+          else
+            gh release create "$TAG_NAME" --repo "$GITHUB_REPOSITORY" \
+              --verify-tag --generate-notes \
+              archives/*.tar.gz archives/*.tar.bz2
+          fi

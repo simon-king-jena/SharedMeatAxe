@@ -1,3 +1,7 @@
+Version 1.0.3: Configurable arithmetic table directory and optional table
+	generation and installation (--enable-tables). Fix parallel tests using
+	MTXLIB. Add GitHub Actions builds, tests, and automated tag releases.
+
 Version 1.0.2: Added libmtx.pc file creation for pkg-config 
 
 Version 1.0.1: Fix shared library build on Cygwin

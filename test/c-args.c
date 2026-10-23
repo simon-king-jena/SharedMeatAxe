@@ -227,7 +227,11 @@ static void Test8()
 
 void TestArgs(unsigned flags)
 {
+    char oldBinDir[sizeof(MtxBinDir)];
+    char oldLibDir[sizeof(MtxLibDir)];
     MtxErrorHandler_t *oldhandler;
+    strcpy(oldBinDir,MtxBinDir);
+    strcpy(oldLibDir,MtxLibDir);
     oldhandler = MtxSetErrorHandler(MyErrorHandler);
     Test1();
     Test2();
@@ -239,8 +243,8 @@ void TestArgs(unsigned flags)
     Test8();
 
     MtxSetErrorHandler(oldhandler);
-    strcpy(MtxBinDir,".");
-    strcpy(MtxLibDir,".");
+    strcpy(MtxBinDir,oldBinDir);
+    strcpy(MtxLibDir,oldLibDir);
     flags = 0;
 }
 

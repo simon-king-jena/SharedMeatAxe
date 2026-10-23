@@ -4,8 +4,9 @@ mtxlibdir = @mtxlibdir@
 if BUILD_TABLES
 TESTS_ENVIRONMENT = MTXLIB='$(abs_top_builddir)/tables' MTX_DEFAULT_LIB='$(mtxlibdir)'
 else
-# Let tests generate any tables they need in the writable test directory.
-TESTS_ENVIRONMENT = MTXLIB='$(abs_builddir)' MTX_DEFAULT_LIB='$(mtxlibdir)'
+# Each test generates tables in its own working directory, avoiding concurrent
+# reads and writes of the same table file when running make check in parallel.
+TESTS_ENVIRONMENT = MTXLIB='.' MTX_DEFAULT_LIB='$(mtxlibdir)'
 endif
 
 # -----> Executables (for tests)
@@ -25,7 +26,7 @@ zzztest_SOURCES       = zzztest.c c-args.c c-charpol.c c-ffmat.c c-fileio.c \
 
 # -----> The test suite
 
-TESTS                 = t-0100 t-0000 t-0100 t-0100 t-0105 t-0106 t-0107 \
+TESTS                 = t-0000 t-0100 t-0105 t-0106 t-0107 \
 	t-0108 t-0109 t-0110 t-0111 t-0112 t-0113 t-0114 t-0115 t-0116 t-0117 \
 	t-0118 t-0200 t-0201 t-0210 t-0211 t-0212 t-0213 t-0214 t-0215 zzztest mtxlib-default.sh
 EXTRA_DIST = mtxlib-default.sh
